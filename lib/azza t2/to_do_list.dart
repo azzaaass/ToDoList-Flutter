@@ -17,9 +17,11 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
- List<String> data = <String>["data1", "data2", "data3", "data3"];
+  List<String> data = <String>["data1", "data2", "data3", "data3"];
+  // Bikin controller di parent
+  final dataController = TextEditingController();
 
-  addData(String data) {
+  void addData(String data) {
     setState(() {
       this.data.add(data);
     });
@@ -43,7 +45,14 @@ class _TodoListState extends State<TodoList> {
       ),
       body: Column(
         children: [
-          TextFieldCustom(),
+          TextFieldCustom(
+            controller: dataController,
+            onTap: (String dataFromChild) {
+              // ambil data dari child pake Higher Order Function
+              // add data dari data dari child
+              addData(dataFromChild);
+            },
+          ),
           Expanded(
             child: Container(
               color: Colors.blue[50],
@@ -63,15 +72,25 @@ class _TodoListState extends State<TodoList> {
 }
 
 class TextFieldCustom extends TodoList {
-  const TextFieldCustom({super.key});
+  // jadikan controller sebagai property untuk nerima value dari parent
+  final TextEditingController controller;
+  // callbacknya untuk eksekusi addData
+  final void Function(String) onTap;
+
+  const TextFieldCustom({
+    super.key,
+    required this.controller,
+    required this.onTap,
+  });
   // const TextFieldCustom({Key? key}) : super(key: key);
-  
+
   @override
   State<TextFieldCustom> createState() => _TextFieldCustomState();
 }
 
 class _TextFieldCustomState extends State<TextFieldCustom> {
-  TextEditingController textController = TextEditingController();
+  // jangan taruh di state
+  // TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -108,13 +127,17 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                   color: Colors.white),
               width: MediaQuery.of(context).size.width / 1.7,
               child: TextField(
+                controller: widget.controller,
                 decoration: InputDecoration(
-                  icon:  InkWell(
-                    child: Icon(
+                  icon: InkWell(
+                    child: const Icon(
                       Icons.add_circle,
                       color: Color(0XFF3e42c2),
                     ),
-                  onTap: ,
+                    onTap: () {
+                      // mengambil data controller di child untuk dikirim ke parent
+                      widget.onTap(widget.controller.text);
+                    },
                   ),
                   border: InputBorder.none,
                   hintText: "Add New",

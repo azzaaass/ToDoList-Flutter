@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Learn/flutter/learn_flutter_basic/linux"
+    "cmake.sourceDirectory": "D:/Learn/flutter/learn_flutter_basic/linux",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
